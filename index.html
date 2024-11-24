@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel=icon href="data:;base64,iVBORw0KGgo=">
+<link href="c.css"rel="stylesheet"media="screen"/>
+<title>PearTable</title>
+</head>
+<body>
+  
+  <header>
+    <p><b>PearTable</b> converts simple tabular data.<br> For plain-text tables, flat object arrays, and key value pairs.
+    </header>
+  
+<!-- ASCII, CSV, TSV, Markdown, HTML, JSON-->
+<div popover id="popover_license">
+<p>By and Copyright &copy; 2020-2024 <a href="https://gregabbott.pages.dev/">Greg Abbott</a>.<br>
+All rights reserved.</p>
+
+<p>NO WARRANTY<br>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+</div>
+
+  <div id="container">
+    <div id="in"  class="column">
+      <h1>Input</h1>
+      <div id="input_format_options"></div>
+      <textarea id="input" type="" name=""/></textarea>
+      <div class="buttons">
+        <button id="button_to_copy_input">Copy</button>
+        <button id="button_to_save_input">Save</button>
+        <button id="guess" title="Also guesses on paste">Guess format</button>
+        <label class="checkbox_holder" for=transpose>Transpose<input hidden type="checkbox" id="transpose"><span>
+        </label>
+        <button id="convert">Run</button>
+      </div>
+    </div><!--$in-->
+    <div id="out" class="column">
+      <h1>Output</h1>
+      <div id="output_format_options"></div>
+      <textarea id="output" type="" name="" value=""/></textarea>
+      <div class="buttons">
+        <button id="button_to_copy_output">Copy</button>
+        <button id="button_to_save_output">Save</button>
+        <button id="button_to_make_output_input">Use as input</button>
+      </div>
+    </div><!--$out-->
+  </div><!--$container-->
+  <footer class="no_select">
+    <button popovertarget="popover_license">By + &copy;</button>
+    <a href="https://gregabbott.pages.dev/">Greg Abbott</a> 2020-2024 | 
+    <button popovertarget="popover_log">Log</button>
+  </footer>
+  	<div popover id="popover_log">
+<pre>
+LOG<!--(Current version date at top)-->
+
+2024_1124
+- Refactors 'output to table' functions to share logic.
+- Adds 'Rights' popover.
+
+2024_1121
+- Escapes tabs and newlines in values for some outputs.
+- Refactors various converters.
+- Adds button to push output to input.
+- Rewrites space separated table parser (handles blank cells).
+- Improves text cleaner (removes invisibles).
+
+2024_1118
+- Adds JSON table: written to present CSV like data.
+
+2024_1114
+- Refactors converter functions into a JS library.
+
+2024_1029
+- Guesses aligned Markdown tables.
+
+2024_1022
+- Converts JSON array lists [["k1","k2"],["v1","v2"]].
+
+2024_1018
+- Adds more markdown list converters.
+- Adds gap separated records converter.
+- Restyles front end.
+- Converts when user changes input or output type.
+- Handles CSV with commas and quotes in values.
+- Moves page information into popovers.
+- Adds copy and save buttons for input and output.
+- Adds function to guess type of input.
+- Triggers guess input on paste.
+- Selects input type on guess.
+
+2024_0910
+- Converts space separated values tables.
+
+2024_0605
+- Adds transpose feature to swap X and Y data.
+
+2020_0721
+- Merges converters to one page.
+  </div>
+  <noscript>
+    <div id="please_enable_js">
+      This page requires JavaScript.
+    </div>
+  </noscript>
+</body>
+<script src="pear_table.js"></script>
+<script src="j.js"></script>
+</html>
