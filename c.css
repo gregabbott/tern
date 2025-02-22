@@ -1,3 +1,4 @@
+/* By + Copyright Greg Abbott V1 2020. V 2025_0222 */
 :root{
   color-scheme: light dark;
   --light:hsl(60, 25%, 95%);
@@ -201,6 +202,9 @@ textarea:focus{
   }
   & input + span::after{
     content: "N";
+  }
+  & input:checked + span, &:hover span{
+    border-left-color: var(--bg);
   }
   & input:checked + span::after{
     content: "Y";

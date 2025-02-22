@@ -10,7 +10,6 @@
   <header>
     <p><b>PearTable</b> converts simple tabular data.<br> For plain-text tables, flat object arrays, and key value pairs.
     </header>
-  
 <!-- ASCII, CSV, TSV, Markdown, HTML, JSON-->
 <div popover id="popover_license">
 <p>By and Copyright &copy; 2020-2024 <a href="https://gregabbott.pages.dev/">Greg Abbott</a>.<br>
@@ -30,15 +29,49 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <button id="button_to_copy_input">Copy</button>
         <button id="button_to_save_input">Save</button>
         <button id="guess" title="Also guesses on paste">Guess format</button>
-        <label class="checkbox_holder" for=transpose>Transpose<input hidden type="checkbox" id="transpose"><span>
-        </label>
-        <button id="convert">Run</button>
+        
       </div>
     </div><!--$in-->
     <div id="out" class="column">
       <h1>Output</h1>
       <div id="output_format_options"></div>
+      <div class="buttons">
+        <label class="checkbox_holder" for=transpose>Transpose<input hidden type="checkbox" id="transpose"><span>
+        </label>
+        
+        <label class="checkbox_holder" for=reverse_key_order title="Reverse Column/Property Order A,B,C -> C,B,A">Reverse Headers<input hidden type="checkbox" id="reverse_key_order"><span>
+        </label>
+        <label 
+          class="checkbox_holder"
+          for=reverse_record_order
+          title="Reverse Records (rows except header) 1,2,3 -> 3,2,1"
+        >
+          Reverse Records
+          <input
+            hidden
+            type="checkbox"
+            id="reverse_record_order"
+          >
+          <span>
+        </label>
+        <label
+          class="checkbox_holder"
+          for=align_if_possible
+          title="If possible to preset as grid"
+        >
+        Align
+        <input
+          hidden
+          type="checkbox"
+          checked
+          id="align_if_possible"
+        >
+        <span>
+        </label>
+        <button id="convert">Run</button>
+      </div>
       <textarea id="output" type="" name="" value=""/></textarea>
+
       <div class="buttons">
         <button id="button_to_copy_output">Copy</button>
         <button id="button_to_save_output">Save</button>
@@ -48,13 +81,33 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   </div><!--$container-->
   <footer class="no_select">
     <button popovertarget="popover_license">By + &copy;</button>
-    <a href="https://gregabbott.pages.dev/">Greg Abbott</a> 2020-2024 | 
+    <a href="https://gregabbott.pages.dev/">Greg Abbott</a> 2020-2025 | 
     <button popovertarget="popover_log">Log</button> | 
     <a href="https://github.com/gregabbott/peartable">GitHub</a>
   </footer>
   	<div popover id="popover_log">
 <pre>
 LOG<!--(Current version date at top)-->
+2025_0222
+- Adds align HTML table (presents as grid).
+- Adds align JS array of objects as table.
+- Adds checkbox 'Align (if possible)' to slim output kind list.
+- Moves processing options to right side.
+
+2025_0221
+- Handles space separated data without aligned columns.
+  - See option "Space table (unaligned)".
+- Adds minimum gap option to "space table (aligned)" logic.
+- Refactors to convert all input to array of arrays first.
+  - Previously array of objects first.
+- Replaces library (from JAO to X) with new (from JAA to X)
+  - JAO: JS array of objects | JAA : JS array of arrays
+- Numbers duplicate headers / column names found in input data.
+- Suffixes number only column headers, to keep their sort order.
+- Handles input where records have or lack different fields.
+- Adds "Reverse Headers" to reverse column/keys (A B C > C B A).
+- Adds "Reverse Records" (i.e. non-header rows): 1 2 3 -> 3 2 1.
+- Removes previous code.
 
 2024_1124
 - Refactors 'output to table' functions to share logic.

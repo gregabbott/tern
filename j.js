@@ -1,31 +1,35 @@
+// By + Copyright Greg Abbott V1 2020. V 2025_0222
 let gebi =x=>document.getElementById(x)
 let el = {}
 let ids = [
   `input`,
   `output`,
   `transpose`,
+  `reverse_key_order`,
+  `reverse_record_order`,
+  `align_if_possible`,
   `convert`,
   `guess`,
   `button_to_make_output_input`
 ]
 ids.forEach(id=>{el[id]=gebi(id)})
 function get_radio_value(n){
+  
   return [...document.getElementsByName(n)]
   .filter(o=>o.checked)[0].value
 }
 const format_options={
-  html:"HTML Table",
-  csv:"CSV Comma separated values",
-  tsv:"TSV Tab separated values",
+  csv:"CSV (Comma separated values)",
+  tsv:"TSV (Tab separated values)",
+  html:"HTML table",
+  ssv:"Space table",
   mdt:"Markdown table",
-  ssv:"Space Table",//Space Separated Values
-  jat:`JSON array Table`,// (Presents and aligns data)
-  gsr:"Gap separated",
   md_gap:"Markdown lists",
   mdl_nested:"Markdown list nested",
+  gsr:"Gap separated",
   jao:`JSON list of objects [{},{}]`,
   jaa:`JSON nested arrays [[keys],[R1],[R2]]`,
-  jsdb:`JSON {"fields":{},"records":[{},{}]}`,
+  jsdb:`JSON DB {"fields":{},"records":[{},{}]}`,
 }
 function make_radio_set({holder,options,checked}){
   const options_holder = gebi(holder)
@@ -48,11 +52,16 @@ function make_radio_set({holder,options,checked}){
   return options_holder
 }
 function run(){
-  el.output.value = pear_table({
+  let opts={
     from:get_radio_value('input_format'),
     to:get_radio_value('output_format'),
-    transpose:el.transpose.checked
-  })(el.input.value)
+    transpose:el.transpose.checked,
+    reverse_key_order:el.reverse_key_order.checked,
+    reverse_record_order:el.reverse_record_order.checked,
+    align_if_possible:el.align_if_possible.checked,
+  }
+  //console.table(opts)
+  el.output.value = pear_table(opts)(el.input.value)
 }
 el.input_format_options = make_radio_set({
   holder:'input_format_options',
@@ -62,7 +71,7 @@ el.input_format_options = make_radio_set({
 el.output_format_options = make_radio_set({
   holder:'output_format_options',
   options:format_options,
-  checked:'jat',
+  checked:'ssv',
 })
 function after_paste(f){return el=>
   el.addEventListener('paste',ev=>{setTimeout(f,0)})
@@ -74,6 +83,7 @@ function guess_format(){
     return
   }
   let id_to_find = `input_format_${guess}`
+  //console.log({guess,id_to_find})
   let option_element = gebi(id_to_find)
   if(option_element){option_element.click()}
   else{
@@ -139,7 +149,9 @@ pink    square  huge   50.00
 blue    cone    small  2.00 
 green   box     wide   6.00
 `.trim()
-let mdt_example=
+
+let example={}
+example.mdt=
 `| On | Try |
 |----------------------|----------------------|
 | Paste | Guess format         |
@@ -147,7 +159,7 @@ let mdt_example=
 | Transpose | Swap X and Y data|
 | Set In + Out to same | Present (align) |`
 
-let for_json_table_text=`[
+example.json_table=`[
   ["Date", "Qty", "From", "To", "Note", "Cleared", "Cost"],
   ["24-09-01", 100, "A", "B", "Red",true,"1,000.50"],
   ["24-10-02", 50000, "B", "C", "Green",false,"5.00"],
@@ -157,7 +169,7 @@ function make_output_input(){
   el.input.value = el.output.value
   guess_format()
 }
-el.input.value = for_json_table_text
+el.input.value = example.json_table
 onclick(run)(el.convert)
 onclick(guess_format)(el.guess)
 onclick(save_input)(gebi("button_to_save_input"))
@@ -165,6 +177,9 @@ onclick(save_output)(gebi("button_to_save_output"))
 onclick(copy_input)(gebi("button_to_copy_input"))
 onclick(copy_output)(gebi("button_to_copy_output"))
 onchange(run)(el.transpose)
+onchange(run)(el.reverse_key_order)
+onchange(run)(el.reverse_record_order)
+onchange(run)(el.align_if_possible)
 after_paste(guess_format)(el.input)
 onclick(make_output_input)(el.button_to_make_output_input)
 //AUTO:
