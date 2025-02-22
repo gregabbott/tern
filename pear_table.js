@@ -393,12 +393,38 @@ a.push(row
 return a
   },[])
 //to JAA from space table!
-to_jaa_from.ssv=ssv=>{
+to_jaa_from.ssv_basic=ssv=>{
   //each cell per line separated by 2 or more spaces
   //but data not necessarily aligned visually
   //Also, disallows (doesn't figure out) empty cells 
   //console.log({ssv})
   return ssv.split('\n').map(x=>x.split(/ {2,}/))
+}
+to_jaa_from.ssv=ssv=>{
+  //ssv basic and ssv aligned both parse slightly differently
+  //col1  col2
+  function is_basic_ssv(ssv_data) {//2025_0222
+    //i.e. cells per column Not aligned left,center,right
+    //checking each cell per row delimited with same string
+      // (fixed number of spaces, over 2)
+    //get delimiter 
+      //(first string equal to 2+ spaces, from 1st content line)
+    //check each line uses exactly that delimiter
+    //or a multiple of it (to account for a blank cell on a row)
+    let rows = ssv_data.trim().split(/\n+/).map(r => r.trimEnd());
+    let first_row = rows.find(r => / {2,}/.test(r));
+    if (!first_row) return false;
+    let match = first_row.match(/ {2,}/);
+    if (!match) return false;
+    let delimiter_length = match[0].length;
+    return rows.every(row => {
+      let parts = row.split(/ {2,}/);
+      let expected_gaps = row.match(/ {2,}/g) || [];
+      return expected_gaps.every(gap => gap.length % delimiter_length === 0);
+    });
+  }
+
+  return to_jaa_from[is_basic_ssv(ssv)?'ssv_basic':'ssv_aligned'](ssv)
 }
 to_jaa_from.ssv_aligned=ssv=>{
   //this one expected the input to be neatly aligned
@@ -511,7 +537,7 @@ to_jaa_from.mdl_nested=s=>{
   return from_gap_separated_records_to_jaa({is_list:false})(
   s
   //convert to gap separated
-  .replace(/- +\n/g,'\n')
+  .replace(/- *\n/g,'\n')//note allow 0+ spaces after bullet
   .replace(/\n[ |\t]+- /g,'\n')
   )
 }
@@ -579,10 +605,17 @@ function guess_format(s){
   if(s.startsWith("<table>"))return `html`
   let first_line = s.substring(0,s.indexOf('\n'))
   if(first_line.includes('\t'))return `tsv`
-  if(/\n\| *:*-+:* *\|/.test(s))return `mdt`
+  if(/\n\| *:*-+:* *\|/.test(s)){
+    return `mdt`
     //MDT allow [space between dashes, alignment ':' left right]
-  if(first_line.includes('  '))return 'ssv'//col1  col2
-  if(/^- +\n( +|\t)- /.test(s))return `mdl_nested`
+  }
+  if(/^- *\n( +|\t)- /.test(s)){
+    //note: allows 0+ spaces after top level bullet
+    return `mdl_nested`
+  }
+  if(first_line.includes(SSV_DELIMITER)){
+    return 'ssv'
+  }
   //checks that need to look at all lines with content:
   let rv = s
     .split('\n')//lines
