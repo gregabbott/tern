@@ -63,7 +63,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
         <input
           hidden
           type="checkbox"
-          checked
+          
           id="align_if_possible"
         >
         <span>
@@ -88,6 +88,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   	<div popover id="popover_log">
 <pre>
 LOG<!--(Current version date at top)-->
+2025_0514
+Fixes a bug in the function that gives every object the same set of keys.
+	Correctly unifies the key order for all objects per list,
+  as needed to output data that separates keys from values:
+  [[k1,k2],[o1k1v,o1k2v],[o2k1v,o2k2v]]
+
 2025_0222
 - Adds align HTML table (presents as grid).
 - Adds align JS array of objects as table.

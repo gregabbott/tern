@@ -31,7 +31,7 @@ const pear_table = (() => {
     )
     //if(a row lacks key that another record has){add it}
     rows.forEach(r=>all_keys.forEach(k=>r[k]??=''))
-    return rows
+    return {rows,all_keys:[...all_keys]}
   }
   function clean_string(s){
     //make spaces normal
@@ -545,17 +545,19 @@ to_jaa_from.jaa=x=>{
   if(typeof x=='string')return JSON.parse(x)
   return x//[[k1,k2],[r1k1v,r1k2v],…] i.e. [keys ...records]
 }
-//JSON array table same as JSON array of arrays (JAA)
-//just presented differently
+//"JSON array table" presents an aligned JSON array of arrays
 to_jaa_from.jaa_aligned=to_jaa_from.jaa
-to_jaa_from.jao=x=>{//JAO == JSON array of objects
+to_jaa_from.jao=data=>{//J.A.O == JSON array of objects
   //items may not have same keys
-  let data = ensure_all_objects_have_all_keys(JSON.parse(x))
-  return data.reduce((a,ob)=>{
-    a.push(Object.values(ob))
+if(typeof data ==='string')data=JSON.parse(data)
+  let {all_keys,rows} = ensure_all_objects_have_all_keys(data)
+  return rows
+  .reduce((a,ob)=>{
+    //Extract the object's values in a unified order to an array
+    a.push(all_keys.map(k=>ob[k]))
     return a
   },
-  [Object.keys(data[0])]
+  [all_keys]
   )
 }
 to_jaa_from.jao_aligned=to_jaa_from.jao
